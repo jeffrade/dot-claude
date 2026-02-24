@@ -24,7 +24,7 @@ GENERATION:
   specs.yaml + models.yaml → SpecificationGenerator → Spec classes + metadata POJOs
   models.yaml              → DescriptorRegistryGenerator → DescriptorRegistry.java
   .proto files             → ProtoOpenAPIGenerator → openapi.yaml
-  models.yaml + specs.yaml → SpringBootServerGenerator → generated-server/
+  models.yaml + specs.yaml → AppServerGenerator → generated-server/
 
 RUNTIME:
   DescriptorRegistry + RuleInterceptor + RuleEngine + Specification → evaluate(target, metadata)
@@ -103,7 +103,7 @@ SQL naming: `role_id` (snake_case) → proto field `role_id` → Java getter `ge
 Feature-level: `@domain:appget` (assigns all scenarios to this domain)
 
 Scenario-level tags:
-- `@target:Employee` — target model/view name
+- `@target:employees` — target model/view name (snake_case plural)
 - `@rule:EmployeeAgeCheck` — explicit rule name
 - `@blocking` — 422 rejection when unsatisfied (non-blocking = informational only)
 - `@view` — target is a view, not a model
@@ -202,7 +202,7 @@ curl -X POST http://localhost:8080/employees \
 | ModelsToProtoConverterTest | 18 | Proto generation from models.yaml, type mapping |
 | ProtoOpenAPIGeneratorTest | 23 | OpenAPI 3.0 generation, CRUD endpoints, security |
 | SpecificationGeneratorTest | 13 | YAML → Java spec classes, metadata POJOs |
-| SpringBootServerGeneratorTest | 17 | RuleService, MetadataExtractor, blocking rules |
+| AppServerGeneratorTest | 17 | RuleService, MetadataExtractor, blocking rules |
 | ConformanceTest | 16 | Cross-language output conformance |
 | RuleTest | 15 | Rule evaluation, compound specs, metadata requirements |
 | GrpcServiceTest | 7 | gRPC service stubs, 5 domain services |
@@ -264,7 +264,7 @@ Adjust verbosity: Edit `log4j2.properties`, change `dev.appget.codegen.level` fr
 
 | Subproject | Status | Notes |
 |------------|--------|-------|
-| `java/` | Production-ready | 274 tests passing, Spring Boot server generator complete |
+| `java/` | Production-ready | 280 tests passing, AppServerGenerator (Spring Boot) complete |
 | `rust/` | POC | `cargo run/build/test/clean` via Makefile; Actix-web |
 | `python/` | Planned | Not started |
 | `node/` | Planned | Not started |

@@ -32,7 +32,7 @@ domains:
   appget:
     namespace: dev.appget
     models:
-      - name: Employee
+      - name: employees
         source_table: employees
         resource: employees
         fields:
@@ -49,7 +49,7 @@ domains:
             nullable: true
             field_number: 2
     views:
-      - name: EmployeeSalaryView
+      - name: employee_salary_view
         source_view: employee_salary_view
         resource: employee-salary-view
         fields:
@@ -65,7 +65,7 @@ domains:
 
 **Domain fields**: `namespace` (string), `models` (list, optional), `views` (list, optional).
 
-**Model/View fields**: `name` (PascalCase), `source_table` or `source_view`, `resource` (kebab-case for REST), `fields` (list).
+**Model/View fields**: `name` (snake_case plural, matches table/view name), `source_table` or `source_view`, `resource` (kebab-case for REST), `fields` (list).
 
 **Field definition**:
 - Required: `name` (snake_case), `type`, `nullable` (bool), `field_number` (int, stable across regenerations)
@@ -95,7 +95,7 @@ rules:
   - name: EmployeeAgeCheck
     target:
       type: model
-      name: Employee
+      name: employees
       domain: appget
     blocking: true
     requires:
@@ -187,15 +187,14 @@ ErrorResponse:
 
 ## gRPC Contract
 
-**Service pattern** (models only, not views). For each model `Employee`:
-- `message EmployeeKey` contains primary key fields in order
-- `rpc CreateEmployee(Employee) returns (Employee)`
-- `rpc GetEmployee(EmployeeKey) returns (Employee)`
-- `rpc UpdateEmployee(Employee) returns (Employee)`
-- `rpc DeleteEmployee(EmployeeKey) returns (google.protobuf.Empty)`
-- `rpc ListEmployees(google.protobuf.Empty) returns (EmployeeList)`
-
-`EmployeeList` has `repeated Employee items`.
+**Service pattern** (models only, not views). For each model `employees` (→ class `Employees`):
+- `message EmployeesId` contains primary key fields in order
+- `message EmployeesList` has `repeated Employees items`
+- `rpc CreateEmployees(Employees) returns (Employees)`
+- `rpc GetEmployees(EmployeesId) returns (Employees)`
+- `rpc UpdateEmployees(Employees) returns (Employees)`
+- `rpc DeleteEmployees(EmployeesId) returns (google.protobuf.Empty)`
+- `rpc ListEmployees(google.protobuf.Empty) returns (EmployeesList)`
 
 **Blocking rules**: Mirror REST behavior. Unsatisfied blocking rule → return `INVALID_ARGUMENT`. Attach rule outcomes as details if `google.rpc.Status` is available.
 
