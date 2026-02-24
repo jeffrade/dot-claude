@@ -1,6 +1,7 @@
 ---
 name: dns-setup
-description: This skill should be used when setting up DNS for a new subdomain without creating full infrastructure. Provides automated Terraform workflow for Route53 DNS configuration, including hosted zone creation, A records, and NS delegation.
+description: "Load this skill when setting up DNS for a new subdomain under an existing parent domain without provisioning full infrastructure. Covers the complete workflow: AWS CLI hosted zone creation, Terraform A record and NS delegation configuration, git-ignored terraform.tfvars for sensitive IPs, and DNS verification via dig."
+allowed-tools: Bash, Read, Glob, Grep, Edit, Write
 ---
 
 # DNS Subdomain Setup

@@ -13,12 +13,6 @@ System-wide configurations and knowledge base for Claude Code.
 | `skills/` | Personal skills (`appget-pipeline`, `appget-contracts`, `iac-conventions`, `dns-setup`) |
 | `docs/` | Saved Anthropic Claude Code reference docs |
 
-## What's ignored (machine-specific or cache)
-
-| Directory / File | Reason |
-|-----------------|--------|
-| `plugins/` | Contains hard-coded absolute paths (`/home/jrade/`) and cached plugin code |
-
 ---
 
 ## New machine setup
