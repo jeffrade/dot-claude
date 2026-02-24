@@ -1,0 +1,25 @@
+# Secret and confidential — never tracked
+config.json
+.credentials.json
+.private
+
+# Ephemeral runtime data — not tracked
+backups/
+cache/
+debug/
+downloads/
+file-history/
+history.jsonl
+ide/
+paste-cache/
+plans/
+plugins/
+projects/
+session-env/
+shell-snapshots/
+stats-cache.json
+statsig/
+tasks/
+telemetry/
+todos/
+
