@@ -17,7 +17,7 @@ plugins/
 projects/
 session-env/
 shell-snapshots/
-stats-cache.json
+*-cache.json
 statsig/
 tasks/
 telemetry/
