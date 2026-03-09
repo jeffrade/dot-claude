@@ -151,7 +151,14 @@
       "Bash(ldd:*)",
       "Bash(strings:*)",
       "Bash(nm:*)",
-      "Bash(readelf:*)"
+      "Bash(readelf:*)",
+      "Bash(make build:*)",
+      "Bash(gradle:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:projectlombok.org)",
+      "Bash(./gradlew:*)",
+      "Bash(./gradlew:*)",
+      "Bash(make:*)"
     ],
     "ask": [
       "Bash(docker push:*)",
@@ -166,9 +173,10 @@
       "Bash(rm:*)",
       "Bash(rmdir:*)",
       "Bash(mkdir:*)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
   },
-  "model": "sonnet",
+  "model": "opus",
   "enabledPlugins": {
     "pr-review-toolkit@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -179,5 +187,8 @@
     "plugin-dev@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "autoUpdatesChannel": "latest",
+  "minimumVersion": "2.1.71",
+  "effortLevel": "high"
 }
