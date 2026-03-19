@@ -189,7 +189,7 @@
     "document-skills@anthropic-agent-skills": true
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
-  "minimumVersion": "2.1.76",
-  "effortLevel": "high"
+  "minimumVersion": "2.1.76"
 }

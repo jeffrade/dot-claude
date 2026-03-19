@@ -1,7 +1,8 @@
 ---
-name: breakdown
-description: "Recursive task decomposition for TODO files. Use when the user asks to break down tasks, create subtask files, identify next work, or mentions TODO_N.md files. Also use when discussing task granularity, atomicity of work items, or planning implementation order for a phased roadmap."
-allowed-tools: Read, Glob, Grep, Write
+name: todo-breakdown
+description: "This skill should be used when the user asks to break down tasks, create subtask files, identify next work, or mentions TODO_N.md files. Also use when discussing task granularity, atomicity of work items, planning implementation order for a phased roadmap, or when a task seems too large to tackle directly. Trigger even if the user just says 'break this down' or 'what should I work on next' in the context of a TODO-driven workflow."
+allowed-tools: Read, Glob, Grep, Write, Edit
+version: 0.2.0
 ---
 
 # TODO Breakdown — Recursive Task Decomposition
@@ -22,11 +23,15 @@ where a = (item_id, description, checkpoint)
       Branch = non-atomic task, children in next-level file
 ```
 
-**Serialization:** Each depth level is stored in `TODO_{N}.md`. A single file contains all nodes at that depth, both leaves and internal nodes. Internal nodes are expanded in `TODO_{N+1}.md`.
+### File Naming and Root Relationship
+
+- `TODO.md` is the **root** (i.e. depth 0, alias CAN be `TODO_0.md`). Its items use plain numeric IDs: `1`, `2`, `3`, ...
+- `TODO_1.md` is depth 1. Its items use prefix `1.`: `1.1`, `1.2`, ...
+- `TODO_N.md` is depth N. Its items use prefix `N.`: `N.1`, `N.2`, ...
+
+Only one root-level item from `TODO.md` (or `TODO_0.md`) is decomposed at a time. The TODO file stack (`TODO_1.md` through `TODO_N.md`) represents the active subtree for that one root item.
 
 **Execution order:** Post-order DFS — all leaves at max depth execute first, then their parents are marked complete, then the next-shallowest incomplete items, bubbling up to the root.
-
-**Expansion:** Only one root-level item from TODO.md is decomposed at a time. The TODO file stack represents the active subtree for that one item.
 
 ---
 
@@ -63,7 +68,27 @@ Parent: `TODO_{N}.md`
 Decomposes: 2.4 → (3.1, 3.2), 2.5 → (3.3, 3.4, 3.5)
 ```
 
-The `Decomposes` line is the adjacency list for this level's parent→children edges.
+The `Decomposes` line is the adjacency list for this level's parent-to-children edges.
+
+---
+
+## Completion Marking
+
+Mark items complete by prepending `[DONE]` to the item title:
+
+```markdown
+## [DONE] 3.1 — ParseAndValidatePrimaryKey Happy Path Tests
+**Parent:** 2.4
+```
+
+Incomplete items have no prefix:
+
+```markdown
+## 3.2 — ParseAndValidatePrimaryKey Error Path Tests
+**Parent:** 2.4
+```
+
+When marking an item complete, use the Edit tool to prepend `[DONE] ` to the `## ` heading. Do not rewrite the rest of the item.
 
 ---
 
@@ -71,9 +96,9 @@ The `Decomposes` line is the adjacency list for this level's parent→children e
 
 Before creating or executing a TODO file, verify these hold. If any are violated, fix the tree before proceeding.
 
-1. **Unique parent** — Every item in `TODO_{N+1}` has exactly one parent in `TODO_N` (injective child→parent mapping).
+1. **Unique parent** — Every item in `TODO_{N+1}` has exactly one parent in `TODO_N` (injective child-to-parent mapping).
 
-2. **Complete expansion** — Every non-atomic item in `TODO_N` has ≥1 child in `TODO_{N+1}` (no internal nodes without children).
+2. **Complete expansion** — Every non-atomic item in `TODO_N` has at least one child in `TODO_{N+1}` (no internal nodes without children).
 
 3. **No orphans** — Every item in `TODO_{N+1}` traces back to a parent in `TODO_N` (no children without parents).
 
@@ -93,7 +118,7 @@ Glob for `TODO*.md` in the working directory. Sort by N to build the file stack.
 
 ### Step 2: Assess atomicity
 
-Apply the atomicity predicate (see below) to every item in the deepest file. Classify each as LEAF or BRANCH.
+Apply the atomicity predicate (see below) to every incomplete item in the deepest file. Classify each as LEAF or BRANCH.
 
 ### Step 3: Act
 
@@ -101,7 +126,7 @@ Apply the atomicity predicate (see below) to every item in the deepest file. Cla
 
 **Some items are BRANCH:** Create `TODO_{N+1}.md`:
 - Expand only the BRANCH items into children
-- Write the `Decomposes:` header mapping parent→children
+- Write the `Decomposes:` header mapping parent-to-children
 - Add `**Parent:** X.Y` to each child item
 - Annotate parent items with `**Children:** TODO_{N+1} items ...`
 - Assess the new children: if any are still BRANCH, repeat (recurse)
@@ -122,16 +147,16 @@ function next_task(stack):
     items = read TODO_N.md, in order
 
     for item in items:
-        if item is incomplete:
+        if item is incomplete (no [DONE] prefix):
             return item          # next leaf to execute
 
     # All items at depth N are complete
     propagate_completion(N)      # mark parents done
-    remove TODO_N.md from stack  # or archive — ask human
+    remove TODO_N.md from stack  # or archive -- ask human
     return next_task(stack)      # recurse shallower
 ```
 
-**Completion propagation:** When all children of parent X.Y are complete, X.Y is complete. Check by reading `TODO_{N}.md`, finding items whose `Children:` all appear in the completed set.
+**Completion propagation:** When all children of parent X.Y are complete (all have `[DONE]` prefix), mark X.Y as `[DONE]` in `TODO_{N-1}.md`. Check by reading `TODO_{N-1}.md`, finding items whose `Children:` all appear with `[DONE]` in `TODO_N.md`.
 
 **Termination:** The stack shrinks by one file each time the deepest level is fully complete. Eventually the root item in `TODO.md` is marked done, and the next root item is selected for decomposition.
 
@@ -153,13 +178,13 @@ A node is a **leaf** when ALL of:
 
 A node is a **branch** (needs children) when ANY of:
 
-- Tests for ≥2 unrelated methods grouped together
+- Tests for 2+ unrelated methods grouped together
 - Multiple file operations that aren't inseparable
 - Requires reading new source files to determine approach
 - Contains sub-steps with different verification points
-- Mixes concerns (implementation + tests, or updates to ≥2 unrelated services)
+- Mixes concerns (implementation + tests, or updates to 2+ unrelated services)
 
-**Heuristic:** 3–6 tests for one method with shared setup = leaf. 10+ tests for one method = split by happy-path vs error-path. Tests for ≥2 unrelated methods = always split.
+**Heuristic:** 3-6 tests for one method with shared setup = leaf. 10+ tests for one method = split by happy-path vs error-path. Tests for 2+ unrelated methods = always split.
 
 ---
 
@@ -187,7 +212,8 @@ Decomposes: {X.A} → ({N+1}.1, {N+1}.2), {X.B} → ({N+1}.3, {N+1}.4, {N+1}.5)
 
 ### Rules
 
-- Item IDs use the file's depth as prefix: TODO_3.md → 3.1, 3.2, 3.3
+- Item IDs use the file's depth as prefix: TODO_3.md items are 3.1, 3.2, 3.3
+- Root TODO.md items use plain numbers: 1, 2, 3
 - Every item has a `**Parent:**` line (the parent item ID in the previous-level file)
 - Every item has a `**Checkpoint:**` line with exact command + expected result
 - Reference ancestor plans for code — don't duplicate
@@ -197,11 +223,11 @@ Decomposes: {X.A} → ({N+1}.1, {N+1}.2), {X.B} → ({N+1}.3, {N+1}.4, {N+1}.5)
 
 ## Completion Flow
 
-When all items in `TODO_{N}.md` are complete:
+When all items in `TODO_{N}.md` are marked `[DONE]`:
 
-1. Mark their parent items in `TODO_{N-1}.md` as done (check via `Children:` links)
-2. If all items in `TODO_{N-1}.md` are now done, repeat upward
-3. Eventually bubbles to `TODO.md` — mark the strategic item done
+1. Mark their parent items in `TODO_{N-1}.md` as `[DONE]` (check via `Children:` links)
+2. If all items in `TODO_{N-1}.md` are now `[DONE]`, repeat upward
+3. Eventually bubbles to `TODO.md` — mark the root item `[DONE]`
 4. Select the next root item from `TODO.md` for decomposition
 
 Whether to delete or archive completed TODO files: ask the human on first completion.
