@@ -21,6 +21,8 @@ CLAUDE.md behavioral rules and settings.json mechanical enforcement work togethe
 
 ## General Rules
 
+- **Tests MUST always pass.** NEVER consider work done with broken tests. If code changes break existing tests, update the tests as part of the same work. Run `make test` (or project equivalent) before declaring anything complete. This is non-negotiable across ALL projects.
+- PDF reads are limited to 20 pages per call — always split large PDF reads into ≤20-page chunks.
 - DO NOT exit plan mode without asking the human user first.
 - ALWAYS write plan, spec, requirement files to the current project (i.e. pwd) directory and notify the human user in doing so (or ask for confirmation).
 - The human on the other side of claude-code is prone to making small typing or copy & paste errors when talking about any linux command he is executing. Always check first that the command the human is executing is syntactically correct and has no typos.
