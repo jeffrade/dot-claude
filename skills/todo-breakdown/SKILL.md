@@ -2,7 +2,7 @@
 name: todo-breakdown
 description: "This skill should be used when the user asks to break down tasks, create subtask files, identify next work, implement/execute TODO items, or mentions TODO_N.md files. Also use when discussing task granularity, atomicity of work items, planning implementation order for a phased roadmap, or when a task seems too large to tackle directly. Trigger even if the user just says 'break this down' or 'what should I work on next' in the context of a TODO-driven workflow. CRITICAL: Also trigger when the user asks to implement, execute, or work on TODO*.md files — this skill defines the completion marking protocol ([DONE] prefix, bottom-up propagation) that MUST be followed during and after execution."
 allowed-tools: Read, Glob, Grep, Write, Edit
-version: 0.5.0
+version: 0.6.0
 ---
 
 # TODO Breakdown — Recursive Task Decomposition
@@ -15,25 +15,34 @@ Break down non-atomic TODO items into subtask files until every item is atomic a
 
 ## Data Model: Rose Tree
 
-The TODO stack is a **rose tree** (general ordered tree) serialized as one file per depth level.
+The TODO stack is a **rose tree** (general ordered tree) serialized as one file per node group.
 
 ```
 Tree a = Leaf a | Branch a [Tree a]
 
 where a = (item_id, description, checkpoint)
       Leaf   = atomic task, ready to execute
-      Branch = non-atomic task, children in next-level file
+      Branch = non-atomic task, children in another file
 ```
 
 ### File Naming
 
-- `TODO.md` is the **root** (depth 0). Items use plain numeric IDs: `1`, `2`, `3`, ...
-- `TODO_1.md` is depth 1. Items use prefix `1.`: `1.1`, `1.2`, ...
-- `TODO_N.md` is depth N. Items use prefix `N.`: `N.1`, `N.2`, ...
+- `TODO.md` is the **root**. Items use plain numeric IDs: `1`, `2`, `3`, ...
+- `TODO_N.md` files use **sequential indices** (N=1, 2, 3...). Items use prefix `N.`: `N.1`, `N.2`, ...
+- N is a sequential index, **NOT a depth level**. Multiple files can coexist, each decomposing different root items or sub-items.
+- Tree structure is tracked via explicit `Parent:` / `Children:` pointers, not implied by N.
+- Multiple root items (or groups like phases) can be decomposed upfront into separate files.
 
-Only one root-level item from `TODO.md` is decomposed at a time. The stack (`TODO_1.md` through `TODO_N.md`) represents the active subtree for that one root item.
+### File Status
 
-**Execution order:** Post-order DFS — deepest leaves first, then parents marked complete, bubbling up to root.
+TODO_N.md files have a `Status` in their header:
+
+- **`Status: active`** — Currently being worked on. The traversal algorithm starts here.
+- **`Status: planned`** — Pre-planned breakdown for future work. May need revision when activated.
+
+When a `planned` file becomes the next to work on, the executor **must verify** the breakdown against the current codebase before executing (see Execution Protocol).
+
+**Execution order:** Post-order DFS within each file — deepest leaves first, then parents marked complete, bubbling up to root.
 
 ---
 
@@ -70,12 +79,11 @@ When checking "are all children done?", skip deferred items.
 
 ## Well-Formedness Invariants
 
-1. **Unique parent** — Every child has exactly one parent in the level above.
+1. **Unique parent** — Every child has exactly one parent (tracked via `Parent:` pointer).
 2. **Complete expansion** — Every non-atomic item has at least one child.
-3. **No orphans** — Every child traces back to a parent.
-4. **Acyclic** — Guaranteed by depth indexing.
+3. **No orphans** — Every child traces back to a root item via parent pointers.
+4. **Acyclic** — Guaranteed by parent pointer direction (children always point up).
 5. **Leaf consistency** — Atomic items have no children.
-6. **Depth contiguity** — No skipped levels.
 
 ---
 
@@ -93,12 +101,12 @@ Apply the atomicity predicate to every incomplete item. Classify each as LEAF or
 
 **All items are LEAF:** Tree is fully expanded. Report the first incomplete leaf.
 
-**Some items are BRANCH:** Create `TODO_{N+1}.md`:
+**Some items are BRANCH:** Create the next `TODO_{N}.md` (where N is the next unused index):
 - Expand BRANCH items into children
-- Write `Decomposes:` header
+- Write `Decomposes:` header with `Status: active` (or `planned` for future work)
 - Add `**Parent:**` to each child
 - Annotate parents with `**Children:**`
-- If new children are still BRANCH, recurse
+- If new children are still BRANCH, recurse into a new file
 
 ### Step 4: Termination check
 
@@ -130,15 +138,16 @@ A node is a **branch** when ANY of:
 ```markdown
 # Subtasks: {brief description}
 
-Parent: `TODO_{N}.md`
-Decomposes: {X.A} → ({N+1}.1, {N+1}.2), {X.B} → ({N+1}.3, {N+1}.4)
+Status: active | planned
+Parent: `TODO.md` (or `TODO_{M}.md` if decomposing a sub-item)
+Decomposes: #X → (N.1, N.2), #Y → (N.3, N.4)
 ```
 
 ### Item format
 
 ```markdown
-## {N+1}.1 — {Concise title}
-**Parent:** {X.A}
+## N.1 — {Concise title}
+**Parent:** #X
 
 **Create/Modify:** `path/to/File.cs`
 
@@ -151,7 +160,7 @@ For test items, list test cases in a table (name + what it asserts) rather than 
 
 ### Rules
 
-- Item IDs use file depth as prefix: TODO_3.md items are 3.1, 3.2, 3.3
+- Item IDs use the file's N as prefix: TODO_3.md items are 3.1, 3.2, 3.3
 - Every item has `**Parent:**` and `**Checkpoint:**` lines
 - Include interface/contract definitions when they ARE the design decision
 - Omit complete file contents — the executor reads source files during execution
@@ -168,23 +177,41 @@ When executing a leaf node:
 3. **Document deviations.** If the implementation differs from the plan, add a `**Deviation:**` note to the leaf before marking [DONE].
 4. **Do not add scope.** If you notice something extra that should be done, note it for the human. Execute exactly what the plan specifies.
 
+### Activating a Planned File
+
+When a `Status: planned` file becomes the next to work on:
+
+1. **Change status** to `Status: active`.
+2. **Verify the breakdown** — read source files referenced by each item, check git log for changes since the file was created. The plan was written with incomplete information; the codebase may have evolved.
+3. **Revise if needed** — update, split, merge, or remove items that no longer match reality. Add a `**Revised:**` note explaining what changed and why.
+4. **Then execute** normally, starting from the first incomplete leaf.
+
 ---
 
 ## Traversal: "What Do I Work On Next?"
 
 ```
-function next_task(stack):
-    N = max depth
-    for item in TODO_N.md (in order):
-        if item is incomplete and not deferred: return item
+function next_task(files):
+    # 1. Find the active file
+    active = find file with Status: active
+    if active:
+        for item in active (in order):
+            if item is incomplete and not deferred: return item
+        # All items complete — finish this file
+        propagate_completion(active)   # mark parents [DONE] in parent file
+        delete active                  # REQUIRED — completed files are ephemeral
 
-    # All items at depth N complete (or deferred)
-    propagate_completion(N)   # mark parents [DONE] in TODO_{N-1}.md
-    delete TODO_N.md          # REQUIRED — non-root files are ephemeral
-    return next_task(stack)   # recurse shallower
+    # 2. Activate the next planned file
+    planned = find lowest-N file with Status: planned
+    if planned:
+        activate(planned)   # Status: planned → active, verify breakdown
+        return next_task(files)
+
+    # 3. No files left — all work complete
+    return null
 ```
 
-**Completion propagation:** When all non-deferred children of parent X.Y are `[DONE]`, mark X.Y as `[DONE]` in `TODO_{N-1}.md`.
+**Completion propagation:** When all non-deferred children of parent X are `[DONE]`, mark X as `[DONE]` in the parent file (identified via `Parent:` header).
 
 ### MANDATORY: Delete Completed Non-Root Files
 

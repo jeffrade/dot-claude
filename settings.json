@@ -176,7 +176,6 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "opus",
   "enabledPlugins": {
     "pr-review-toolkit@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
