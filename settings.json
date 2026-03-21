@@ -176,9 +176,6 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "alwaysThinkingEnabled": true,
-  "autoUpdatesChannel": "latest",
-  "effortLevel": "high"
   "enabledPlugins": {
     "pr-review-toolkit@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -188,8 +185,7 @@
     "skill-creator@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
-    "document-skills@anthropic-agent-skills": true
-    "claude-code-setup@claude-plugins-official": true,
+    "document-skills@anthropic-agent-skills": true,
     "frontend-design@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
@@ -203,7 +199,9 @@
     "postman@claude-plugins-official": true,
     "chrome-devtools-mcp@claude-plugins-official": true
   },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.80",
-  "model": "opus",
   "voiceEnabled": true
 }

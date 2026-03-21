@@ -15,6 +15,7 @@ paste-cache/
 plans/
 plugins/
 projects/
+sessions/
 session-env/
 sessions/
 shell-snapshots/
