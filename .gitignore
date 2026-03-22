@@ -22,5 +22,6 @@ shell-snapshots/
 statsig/
 tasks/
 telemetry/
+tmp/
 todos/
 
