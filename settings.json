@@ -196,7 +196,16 @@
     "firecrawl@claude-plugins-official": true,
     "circleback@claude-plugins-official": true,
     "postman@claude-plugins-official": true,
-    "chrome-devtools-mcp@claude-plugins-official": true
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "docs-todos-auditor@devix-labs": true
+  },
+  "extraKnownMarketplaces": {
+    "devix-labs": {
+      "source": {
+        "source": "directory",
+        "path": "/home/jrade/.claude/custom-plugins"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",

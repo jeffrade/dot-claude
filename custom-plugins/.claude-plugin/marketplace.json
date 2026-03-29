@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "devix-labs",
+  "description": "Devix Labs custom plugins for cross-project automation",
+  "owner": {
+    "name": "Devix Labs, Inc.",
+    "email": "jeff@devixlabs.com"
+  },
+  "plugins": [
+    {
+      "name": "docs-todos-auditor",
+      "description": "Audit docs/todos/ directories against codebase state. Detects completed, stale, or outdated todo docs by cross-referencing git history and source code.",
+      "source": "./plugins/docs-todos-auditor",
+      "category": "development"
+    }
+  ]
+}
