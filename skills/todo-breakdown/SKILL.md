@@ -228,3 +228,9 @@ When all items in a non-root `TODO_N.md` are `[DONE]` (or deferred), **you MUST 
 - **Expansion doesn't reduce scope:** Stop. Flag for human review.
 - **Mixed leaves and branches:** Normal. Only expand branches.
 - **Execution deviates from plan:** Document in the leaf node before marking [DONE]. Propagate significant deviations to sibling leaves.
+
+---
+
+## Related: Spec Document Auditing
+
+TODO files track **execution** (how to build). Spec documents in `docs/todos/` track **what to build** — phase-mapped specs with lifecycle management. Use `/audit-todos-dlabs` to audit spec docs against codebase state, detect completed/stale/outdated specs, and clean up after implementation work. The entry point for specs is `docs/todos/ROADMAP.md`.
