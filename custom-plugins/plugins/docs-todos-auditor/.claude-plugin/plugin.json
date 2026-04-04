@@ -1,0 +1,9 @@
+{
+  "name": "docs-todos-auditor",
+  "description": "Audit docs/todos/ directories against codebase state. Detects completed, stale, or outdated todo docs by cross-referencing git history and source code. Works with any project adopting the docs/todos/ two-tier documentation pattern.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Devix Labs, Inc.",
+    "email": "jeff@devixlabs.com"
+  }
+}
