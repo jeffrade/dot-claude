@@ -7,14 +7,16 @@ config.json
 backups/
 cache/
 debug/
+docs/superpowers/
 downloads/
 file-history/
 history.jsonl
 ide/
 paste-cache/
 plans/
-plugins/
+/plugins/
 projects/
+repos/
 sessions/
 session-env/
 sessions/

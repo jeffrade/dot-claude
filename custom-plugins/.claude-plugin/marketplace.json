@@ -12,6 +12,12 @@
       "description": "Audit docs/todos/ directories against codebase state. Detects completed, stale, or outdated todo docs by cross-referencing git history and source code.",
       "source": "./plugins/docs-todos-auditor",
       "category": "development"
+    },
+    {
+      "name": "java-dev-toolkit",
+      "description": "Opinionated Java development plugin with architect, developer, tester, reviewer, and navigator agents guided by Effective Java and shift-left principles.",
+      "source": "./plugins/java-dev-toolkit",
+      "category": "development"
     }
   ]
 }

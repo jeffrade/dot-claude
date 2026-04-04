@@ -1,0 +1,9 @@
+{
+  "name": "java-dev-toolkit",
+  "description": "Opinionated Java development plugin: architecture, implementation, testing, and code review guided by Effective Java principles, immutability-first design, and shift-left engineering.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Devix Labs, Inc.",
+    "email": "jeff@devixlabs.com"
+  }
+}

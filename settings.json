@@ -198,14 +198,16 @@
     "circleback@claude-plugins-official": true,
     "postman@claude-plugins-official": false,
     "chrome-devtools-mcp@claude-plugins-official": true,
-    "docs-todos-auditor@devix-labs": true
+    "docs-todos-auditor@devix-labs": true,
+    "java-dev-toolkit@devix-labs": true
   },
   "extraKnownMarketplaces": {
     "devix-labs": {
       "source": {
         "source": "directory",
         "path": "/home/jrade/.claude/custom-plugins"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "alwaysThinkingEnabled": true,
