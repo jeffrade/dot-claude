@@ -199,7 +199,8 @@
     "postman@claude-plugins-official": false,
     "chrome-devtools-mcp@claude-plugins-official": true,
     "docs-todos-auditor@devix-labs": true,
-    "java-dev-toolkit@devix-labs": true
+    "java-dev-toolkit@devix-labs": true,
+    "openbb-terminal@claude-code-plugins-plus": true
   },
   "extraKnownMarketplaces": {
     "devix-labs": {
@@ -208,6 +209,12 @@
         "path": "/home/jrade/.claude/custom-plugins"
       },
       "autoUpdate": true
+    },
+    "claude-code-plugins-plus": {
+      "source": {
+        "source": "github",
+        "repo": "jeremylongshore/claude-code-plugins-plus-skills"
+      }
     }
   },
   "alwaysThinkingEnabled": true,

@@ -31,6 +31,22 @@ CLAUDE.md behavioral rules and settings.json mechanical enforcement work togethe
 
 ---
 
+## 🔌 Plugin Management
+
+**Prefer the marketplace approach** — if a GitHub repo has `.claude-plugin/marketplace.json`, add it as a marketplace and install normally:
+```bash
+claude plugin marketplace add OWNER/REPO
+claude plugin install PLUGIN_NAME@MARKETPLACE_NAME
+```
+
+Custom (local) plugins live in `~/.claude/custom-plugins/plugins/` under the `devix-labs` marketplace.
+
+Run `make help` in `~/.claude/` for all plugin management commands.
+
+**Fetching raw files from GitHub:** Use `gh api repos/OWNER/REPO/contents/PATH --jq '.content' | base64 -d` — WebFetch often summarizes markdown instead of returning exact content.
+
+---
+
 ## 📚 Reference Directories
 
 ### ~/Desktop/claude-code/
