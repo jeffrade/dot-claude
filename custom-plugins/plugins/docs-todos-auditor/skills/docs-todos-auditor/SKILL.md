@@ -9,7 +9,15 @@ tools: Read, Glob, Grep, Bash, Edit, Agent
 
 Audit, evaluate, and maintain `docs/todos/` directories across any project that adopts the two-tier documentation pattern (`docs/` = active, `docs/todos/` = pending).
 
-**This skill can modify and delete files in `docs/todos/`.** It always presents findings first and requires user approval before making changes.
+**This skill can modify and delete files in `docs/todos/`.** It presents findings first, then applies changes:
+
+| Action | Confirmation |
+|--------|-------------|
+| Structural fixes (dead links, paths, re-ordering) | Autonomous |
+| Deletions | Requires user approval |
+| Ambiguous references | Requires user approval |
+
+TODO source files in `docs/todos/` are git-committed truth — keep them accurate, internally consistent, and correctly cross-referenced.
 
 ## Workflow
 
@@ -113,23 +121,26 @@ Format:
 - <changes needed to ROADMAP.md or docs/README.md>
 ```
 
-### Phase 4: Apply Changes (with approval)
+### Phase 4: Apply Changes
 
-After user approves, apply changes in this order:
+Apply changes in this order. Items marked **[confirm]** require user approval before proceeding; all others are applied autonomously.
 
-1. **Delete** completed docs
+1. **[confirm]** **Delete** completed docs
 2. **Edit** partially done docs (mark completed items, remove done sections)
 3. **Update** stale docs (fix file paths, class names, test counts, etc.)
-4. **Update entry point** (ROADMAP.md and/or docs/README.md) to reflect deletions and status changes
-5. **Flag orphans** — docs not referenced in any entry point
+4. **Fix broken references** in entry point — remove dead links, correct label/link mismatches, update stale file paths. Do this without asking.
+5. **Re-order** sections or items in the entry point to reflect current state (completed phases above pending; items ordered by dependency or phase). Do this without asking unless re-ordering could change meaning.
+6. **Update entry point** (ROADMAP.md and/or docs/README.md) to reflect all the above
+7. **[confirm if ambiguous]** **Resolve orphans** — docs not referenced in any entry point. If the right home is obvious, add the reference; if ambiguous, ask the user.
 
 ### Phase 5: Verify Consistency
 
 After all changes:
 
 1. Confirm every file in `docs/todos/` is referenced in the entry point
-2. Confirm no entry point references point to deleted files
+2. Confirm no entry point references point to deleted files — fix any that do, autonomously
 3. Confirm phase status annotations in ROADMAP.md match reality
+4. Confirm all cross-references between TODO files (Parent/Children pointers, plan file paths) are correct and resolvable
 
 ## Proactive Trigger Guidance
 
