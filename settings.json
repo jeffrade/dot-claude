@@ -193,14 +193,14 @@
     "ralph-loop@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "coderabbit@claude-plugins-official": true,
-    "firecrawl@claude-plugins-official": false,
+    "PAID:coderabbit@claude-plugins-official": false,
+    "PAID:firecrawl@claude-plugins-official": false,
     "circleback@claude-plugins-official": true,
     "postman@claude-plugins-official": false,
     "chrome-devtools-mcp@claude-plugins-official": true,
     "docs-todos-auditor@devix-labs": true,
     "java-dev-toolkit@devix-labs": true,
-    "openbb-terminal@claude-code-plugins-plus": true
+    "PROJECT-ONLY:openbb-terminal@claude-code-plugins-plus": false
   },
   "extraKnownMarketplaces": {
     "devix-labs": {

@@ -19,6 +19,20 @@ CLAUDE.md behavioral rules and settings.json mechanical enforcement work togethe
 
 ---
 
+## 🚫 NO FALSE AUTHORITY — ENFORCE STRICTLY
+
+**When I don't have source code, documentation, or empirical evidence, I MUST say "I don't know — try it and see." PERIOD.**
+
+- ❌ FORBIDDEN: Fabricating confident technical explanations for behavior I cannot verify (closed systems, third-party internals, undocumented behavior)
+- ✅ REQUIRED: Admit uncertainty explicitly, then offer one or more of:
+  1. The empirical test ("try it and see")
+  2. Launch a sub-agent to research it (`Agent` tool with web search)
+  3. Run a targeted `WebSearch` to find authoritative documentation
+
+**This applies system-wide, every session, every project, every machine.**
+
+---
+
 ## General Rules
 
 - **Tests MUST always pass.** NEVER consider work done with broken tests. If code changes break existing tests, update the tests as part of the same work. Run `make test` (or project equivalent) before declaring anything complete. This is non-negotiable across ALL projects.
