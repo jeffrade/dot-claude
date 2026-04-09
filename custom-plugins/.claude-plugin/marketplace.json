@@ -18,6 +18,12 @@
       "description": "Opinionated Java development plugin with architect, developer, tester, reviewer, and navigator agents guided by Effective Java and shift-left principles.",
       "source": "./plugins/java-dev-toolkit",
       "category": "development"
+    },
+    {
+      "name": "stonkr",
+      "description": "Financial toolkit for Claude — ticker lookups, options analysis, hedging strategies, and portfolio scenarios",
+      "source": "./plugins/stonkr",
+      "category": "finance"
     }
   ]
 }
