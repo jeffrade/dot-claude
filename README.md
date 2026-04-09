@@ -9,8 +9,8 @@ System-wide configurations and knowledge base for Claude Code.
 | Directory / File | Purpose |
 |-----------------|---------|
 | `CLAUDE.md` | Global Claude Code instructions |
-| `agents/` | Custom agents (`appget-specialist`, `skill-architect`) |
-| `skills/` | Personal skills (`appget-pipeline`, `appget-contracts`, `iac-conventions`, `dns-setup`) |
+| `agents/` | Custom agents (`makefile-expert`, `skill-architect`) |
+| `skills/` | Personal skills (`makefile`, `todo-breakdown`, `iac-conventions`, `dns-setup`) |
 | `docs/` | Saved Anthropic Claude Code reference docs |
 | `custom-plugins/` | Devix Labs custom marketplace (`docs-todos-auditor`, `java-dev-toolkit`) |
 | `Makefile` | Plugin management commands (`make help` for details) |

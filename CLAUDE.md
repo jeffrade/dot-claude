@@ -67,4 +67,7 @@ Run `make help` in `~/.claude/` for all plugin management commands.
 Project-specific resources and documentation. Available when needed but NOT loaded into context at startup.
 
 **Current Contents:**
-- `linux/r8168-network-driver-fix.md` - Documentation for r8169/r8168 driver conflict and permanent fix (applied 2026-02-04)
+- `TODO.txt` - Miscellaneous scratch notes
+
+### ~/.claude/docs/todos/
+Pending maintenance TODOs for this repo. Check `TODO.md` at the start of any maintenance session.
