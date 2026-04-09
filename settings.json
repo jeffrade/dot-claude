@@ -214,7 +214,8 @@
       "source": {
         "source": "github",
         "repo": "jeremylongshore/claude-code-plugins-plus-skills"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "alwaysThinkingEnabled": true,
