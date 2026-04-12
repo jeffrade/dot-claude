@@ -8,6 +8,7 @@ backups/
 cache/
 debug/
 docs/superpowers/
+/todos/*.json
 downloads/
 file-history/
 history.jsonl
