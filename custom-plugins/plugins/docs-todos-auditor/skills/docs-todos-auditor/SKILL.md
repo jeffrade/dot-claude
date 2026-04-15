@@ -14,8 +14,17 @@ Audit, evaluate, and maintain `docs/todos/` directories across any project that 
 | Action | Confirmation |
 |--------|-------------|
 | Structural fixes (dead links, paths, re-ordering) | Autonomous |
-| Deletions | Requires user approval |
+| Deletion of 100% completed `TODO_*.md` files (unambiguous) | **Autonomous — MUST delete** |
+| Deletion where any ambiguity remains (partial completion, unclear rollup, dangling refs) | Requires user approval |
 | Ambiguous references | Requires user approval |
+
+**Deletion rule (non-negotiable):** A completed `TODO_*.md` file MUST be deleted autonomously when ALL of the following hold:
+1. Every checklist item / acceptance criterion is `[x]` or marked DONE.
+2. The parent (`TODO.md` or `ROADMAP.md`) has been updated to reflect completion (rollup done).
+3. Related source code, tests, and Makefile wiring exist and are green.
+4. No cross-reference from another active TODO depends on the file staying.
+
+If all four hold, delete without asking. Git history preserves the spec. Only ask when something is ambiguous (partial work, missing rollup, or another TODO still points to it as a live dependency).
 
 TODO source files in `docs/todos/` are git-committed truth — keep them accurate, internally consistent, and correctly cross-referenced.
 
@@ -125,7 +134,7 @@ Format:
 
 Apply changes in this order. Items marked **[confirm]** require user approval before proceeding; all others are applied autonomously.
 
-1. **[confirm]** **Delete** completed docs
+1. **Delete** completed docs — autonomous when the 4-point deletion rule above is satisfied; `[confirm]` only when ambiguity remains
 2. **Edit** partially done docs (mark completed items, remove done sections)
 3. **Update** stale docs (fix file paths, class names, test counts, etc.)
 4. **Fix broken references** in entry point — remove dead links, correct label/link mismatches, update stale file paths. Do this without asking.

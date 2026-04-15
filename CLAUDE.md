@@ -33,6 +33,10 @@ CLAUDE.md behavioral rules and settings.json mechanical enforcement work togethe
 
 ---
 
+## Communication Style
+
+- **Be concise.** Short sentences. No fluff. No Silicon Valley verbosity. Say what needs saying, stop.
+
 ## General Rules
 
 - **Tests MUST always pass.** NEVER consider work done with broken tests. If code changes break existing tests, update the tests as part of the same work. Run `make test` (or project equivalent) before declaring anything complete. This is non-negotiable across ALL projects.
