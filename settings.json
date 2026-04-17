@@ -218,7 +218,7 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       },
-      "autoUpdate": true
+      "autoUpdate": false
     }
   },
   "alwaysThinkingEnabled": true,
