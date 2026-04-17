@@ -2,7 +2,7 @@
 name: todo-breakdown
 description: "This skill should be used when the user asks to break down tasks, create subtask files, identify next work, implement/execute TODO items, or mentions TODO_N.md files. Also use when discussing task granularity, atomicity of work items, planning implementation order for a phased roadmap, or when a task seems too large to tackle directly. Trigger even if the user just says 'break this down' or 'what should I work on next' in the context of a TODO-driven workflow. CRITICAL: Also trigger when the user asks to implement, execute, or work on TODO*.md files — this skill defines the completion marking protocol ([DONE] prefix, bottom-up propagation) that MUST be followed during and after execution."
 allowed-tools: Read, Glob, Grep, Write, Edit
-version: 0.6.0
+version: 0.7.0
 ---
 
 # TODO Breakdown — Recursive Task Decomposition
@@ -108,9 +108,29 @@ Apply the atomicity predicate to every incomplete item. Classify each as LEAF or
 - Annotate parents with `**Children:**`
 - If new children are still BRANCH, recurse into a new file
 
-### Step 4: Termination check
+### Step 4: Exhaustive First-Pass Requirement (MANDATORY)
+
+**Do not stop after one level of decomposition.** After each expansion, re-run Step 2 against every newly created child. Continue creating TODO_{N+1}, TODO_{N+2}, ... until a full pass over all incomplete items yields zero BRANCH classifications.
+
+The user should never have to say "break them down further." If they do, you stopped early — the decomposition was incomplete.
+
+**Fixpoint rule:** decomposition is complete only when applying the atomicity predicate to every incomplete non-deferred item in every file yields LEAF for all of them.
+
+### Step 5: Termination check
 
 Each expansion must strictly reduce scope. If children aren't clearly smaller than the parent, flag for human review.
+
+### Step 6: Pre-completion self-review (MANDATORY)
+
+Before reporting the breakdown complete, grep the final set of leaf descriptions for these keywords:
+
+- `decide`, `decision`, `choose`, `choice`, `pick between`
+- `investigate`, `determine`, `figure out`, `trace`, `audit`
+- `explore`, `assess`, `evaluate options`
+- `and then`, `after that`, `followed by` (sequence markers)
+- `also`, `plus`, `as well as` (scope-creep markers)
+
+Any match indicates an unexpanded branch. Split the leaf into: (a) the investigation/decision step as its own leaf, (b) the implementation, (c) the verification (tests/docs). Then re-run Step 4.
 
 ---
 
@@ -128,6 +148,10 @@ A node is a **branch** when ANY of:
 - Requires reading new source files to determine approach
 - Sub-steps with different verification points
 - Mixes concerns (implementation + tests for unrelated code)
+- **Requires a design decision** — any item containing "decide", "choose between", "pick", "determine approach", or presenting two or more options (A / B / (a) / (b)) is BRANCH. Split into: investigate → decide → implement → verify.
+- **Requires prior investigation** — any item starting with "trace", "investigate", "inventory", "audit", "figure out" is an investigation leaf; the implementation that follows is a separate leaf.
+- **Contains sequence markers** — "then", "after", "followed by", "also" in the description signals multiple checkpoints disguised as one item.
+- **Modifies source + test together for non-trivial logic** — if the behavior change requires reasoning (not just a mechanical find/replace), split: implement → update/add tests.
 
 ---
 
@@ -224,10 +248,11 @@ When all items in a non-root `TODO_N.md` are `[DONE]` (or deferred), **you MUST 
 ## Edge Cases
 
 - **No TODO.md exists:** Ask the user.
-- **Borderline atomic:** Break it down. An extra level costs nothing.
+- **Borderline atomic:** Break it down. An extra level costs nothing. Default bias = split.
 - **Expansion doesn't reduce scope:** Stop. Flag for human review.
 - **Mixed leaves and branches:** Normal. Only expand branches.
 - **Execution deviates from plan:** Document in the leaf node before marking [DONE]. Propagate significant deviations to sibling leaves.
+- **Unsure whether to expand:** Expand. User asking "break them down further" means you already failed the exhaustive-pass requirement.
 
 ---
 
