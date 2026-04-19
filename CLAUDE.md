@@ -33,6 +33,24 @@ CLAUDE.md behavioral rules and settings.json mechanical enforcement work togethe
 
 ---
 
+## 🔍 RIYDKFC — "Research If You Don't Know For Certain"
+
+**When the user writes `RIYDKFC` anywhere in a prompt: STOP. Do not answer from training data alone.**
+
+This is a hard override. Execution:
+1. Acknowledge you are executing RIYDKFC
+2. Use `WebSearch`, `WebFetch`, or spawn a research `Agent` to find authoritative sources
+3. Cite the sources in your response
+4. Only then provide an answer grounded in what you actually found
+
+- ❌ FORBIDDEN: Responding with training-data confidence when `RIYDKFC` is present
+- ❌ FORBIDDEN: Skipping the research step even if you "think" you know the answer
+- ✅ REQUIRED: External research FIRST, answer SECOND — every single time
+
+**This is a direct escalation of NO FALSE AUTHORITY. `RIYDKFC` = user has zero tolerance for hallucination on this specific question.**
+
+---
+
 ## Communication Style
 
 - **Be concise.** Short sentences. No fluff. No Silicon Valley verbosity. Say what needs saying, stop.
