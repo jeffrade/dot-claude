@@ -1,0 +1,9 @@
+{
+  "name": "evaluator",
+  "description": "Evaluator-optimizer plugin for Claude Code. Validates correctness (Makefile targets) and completeness (requirements coverage) in both user and agent-to-agent contexts.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Devix Labs, Inc.",
+    "email": "jeff@devixlabs.com"
+  }
+}

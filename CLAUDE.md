@@ -64,10 +64,17 @@ This is a hard override. Execution:
 - The human on the other side of claude-code is prone to making small typing or copy & paste errors when talking about any linux command he is executing. Always check first that the command the human is executing is syntactically correct and has no typos.
 - ALWAYS run the command shellcheck on all changes to shell (or bash) scripts (or when done creating a new script) and resolve the errors until they're fixed (i.e. exit 0 returned and nothing in stdout/stderr).
 - ALWAYS look for a Makefile in a project and understand what each command does AND use them accordingly when working on tasks and source code.
+- Grep Makefile targets with `grep -qE "^target\s*:"` — `^target:` misses `target :` (space before colon).
+- Makefile heredocs (`<< 'EOF'`) don't work — each recipe line runs in a separate subshell. Use dedicated scripts in `scripts/` instead.
 
 ---
 
 ## 🔌 Plugin Management
+
+**Skill `$ARGUMENTS` pattern:** `$ARGUMENTS` is a shell env var, not stdin. Never `echo '$ARGUMENTS'` (single quotes block expansion). Pass as `sys.argv[1]`:
+```bash
+python3 -c "import sys, json; ..." "$ARGUMENTS"
+```
 
 **Prefer the marketplace approach** — if a GitHub repo has `.claude-plugin/marketplace.json`, add it as a marketplace and install normally:
 ```bash

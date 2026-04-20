@@ -2,11 +2,15 @@
 config.json
 .credentials.json
 .private
+claude.session
+claude.chat
 
 # Ephemeral runtime data — not tracked
+.caveman*
+*-cache.json
+__pycache__
 backups/
 cache/
-.caveman*
 debug/
 docs/superpowers/
 downloads/
@@ -22,7 +26,6 @@ sessions/
 session-env/
 sessions/
 shell-snapshots/
-*-cache.json
 statsig/
 tasks/
 telemetry/
