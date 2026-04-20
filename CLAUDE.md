@@ -3,7 +3,7 @@
 **Claude MUST NEVER execute git write operations. PERIOD.**
 
 - ❌ FORBIDDEN: `git add`, `git commit`, `git push`, `git reset`, `git rebase`, `git pull`, `git checkout`, `git restore`
-- ✅ ALLOWED ONLY: `git status`, `git log`, `git diff`, `git show`, `git branch`, `git remote`
+- ✅ ALLOWED ONLY: `git status`, `git log`, `git diff`, `git show`, `git branch`, `git remote`, `git worktree`
 
 **Consequence:** Using forbidden git commands breaks the codebase. This rule is non-negotiable.
 
