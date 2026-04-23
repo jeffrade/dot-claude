@@ -1,5 +1,5 @@
 ---
-name: docs-todos-auditor
+name: audit
 description: Audit docs/todos/ directory against codebase state. Detects completed, stale, or outdated todo docs by cross-referencing git history and source code. Use when user asks to audit todos, check pending work, clean up todo docs, or after completing a major task. Also trigger proactively when a session completes significant implementation work that may have resolved a todo doc.
 version: 1.0.0
 tools: Read, Glob, Grep, Bash, Edit, Agent
