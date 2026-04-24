@@ -224,6 +224,10 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
-  "minimumVersion": "2.1.100",
-  "voiceEnabled": false
+  "minimumVersion": "2.1.119",
+  "voiceEnabled": false,
+  "verbose": true,
+  "preferredNotifChannel": "iterm2_with_bell",
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": true
 }
