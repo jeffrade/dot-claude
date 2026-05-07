@@ -17,11 +17,13 @@ downloads/
 file-history/
 history.jsonl
 ide/
+/logs/
 paste-cache/
 plans/
 /plugins/
 projects/
 repos/
+security_warnings_state_*.json
 sessions/
 session-env/
 sessions/
@@ -30,4 +32,3 @@ statsig/
 tasks/
 telemetry/
 tmp/
-
