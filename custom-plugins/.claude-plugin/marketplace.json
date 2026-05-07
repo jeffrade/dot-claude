@@ -24,6 +24,12 @@
       "description": "Financial toolkit for Claude — ticker lookups, options analysis, hedging strategies, and portfolio scenarios",
       "source": "./plugins/stonkr",
       "category": "finance"
+    },
+    {
+      "name": "media-tools",
+      "description": "Media conversion utilities — webm-to-gif and related screencast/video helpers using ffmpeg and gifsicle.",
+      "source": "./plugins/media-tools",
+      "category": "utilities"
     }
   ]
 }

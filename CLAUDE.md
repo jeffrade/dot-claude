@@ -84,6 +84,15 @@ claude plugin install PLUGIN_NAME@MARKETPLACE_NAME
 
 Custom (local) plugins live in `~/.claude/custom-plugins/plugins/` under the `devix-labs` marketplace.
 
+**Creating a new local plugin** requires all three:
+1. `plugins/NAME/.claude-plugin/plugin.json` (manifest in subdir, NOT plugin root)
+2. Entry in `~/.claude/custom-plugins/.claude-plugin/marketplace.json` `plugins` array
+3. `claude plugin install NAME@devix-labs` then restart session
+
+**Skill missing from `/skills`?** Check plugin registration first (steps 1–3 above) before debugging the skill content.
+
+**Stale plugin cache:** `claude plugin prune` only removes unused deps, NOT old version dirs under `~/.claude/plugins/cache/MARKETPLACE/PLUGIN/VERSION/`. Manual `rm -rf` required. Cross-reference `~/.claude/plugins/installed_plugins.json` to find live versions.
+
 Run `make help` in `~/.claude/` for all plugin management commands.
 
 **Fetching raw files from GitHub:** Use `gh api repos/OWNER/REPO/contents/PATH --jq '.content' | base64 -d` — WebFetch often summarizes markdown instead of returning exact content.

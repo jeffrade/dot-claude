@@ -7,6 +7,7 @@ claude.chat
 
 # Ephemeral runtime data — not tracked
 .caveman*
+.last-cleanup
 *-cache.json
 __pycache__
 backups/

@@ -196,7 +196,8 @@
     "chrome-devtools-mcp@claude-plugins-official": true,
     "docs-todos-auditor@devix-labs": true,
     "java-dev-toolkit@devix-labs": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "media-tools@devix-labs": true
   },
   "extraKnownMarketplaces": {
     "devix-labs": {
@@ -225,9 +226,9 @@
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.119",
-  "voiceEnabled": false,
   "verbose": true,
   "preferredNotifChannel": "iterm2_with_bell",
   "remoteControlAtStartup": false,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": false
 }

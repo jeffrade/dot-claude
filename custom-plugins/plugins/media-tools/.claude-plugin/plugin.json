@@ -1,0 +1,9 @@
+{
+  "name": "media-tools",
+  "description": "Media conversion utilities. Includes webm-to-gif for converting screen recordings into shareable animated GIFs via ffmpeg and gifsicle.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Devix Labs, Inc.",
+    "email": "jeff@devixlabs.com"
+  }
+}
