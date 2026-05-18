@@ -197,7 +197,8 @@
     "docs-todos-auditor@devix-labs": true,
     "java-dev-toolkit@devix-labs": true,
     "caveman@caveman": true,
-    "media-tools@devix-labs": true
+    "media-tools@devix-labs": true,
+    "client-plugin@client-tools": false
   },
   "extraKnownMarketplaces": {
     "devix-labs": {
@@ -220,15 +221,24 @@
         "repo": "JuliusBrussee/caveman"
       },
       "autoUpdate": false
+    },
+    "client-tools": {
+      "source": {
+        "source": "git",
+        "url": "git@github.com:devixlabs/client_plugin.git",
+        "path": "/home/jrade/code/devixlabs/client_name-staging/client_plugin"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
-  "minimumVersion": "2.1.119",
+  "minimumVersion": "2.1.143",
+  "editorMode": "vim",
   "verbose": true,
   "preferredNotifChannel": "iterm2_with_bell",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
   "voiceEnabled": false
 }
