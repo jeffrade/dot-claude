@@ -84,6 +84,38 @@ ffmpeg -y -ss 5 -t 30 -i "$INPUT" -i "$PALETTE" \
   "$OUTPUT"
 ```
 
+### Speed up / slow down playback
+
+Use `setpts=(1/SPEED)*PTS` in the filter chain. Examples: `2x = 0.5*PTS`,
+`3x = 0.333*PTS`, `0.5x = 2.0*PTS`. GIFs have no audio track — no `atempo`
+or `-an` needed. For webm-to-webm conversion that keeps audio, use the
+audio variant below.
+
+Insert `setpts` between `fps` and `scale` on the second ffmpeg pass only
+(palette pass uses original timing — drop the `setpts` there or palette
+generation will skip frames). With trim, `-ss/-t` reflect SOURCE time, so
+output duration = `DURATION / SPEED`.
+
+```bash
+# 2x speed of trimmed range — example: first 52s source → 26s gif
+SPEED=2.0
+PTS=$(awk -v s="$SPEED" 'BEGIN{printf "%.6f", 1/s}')
+
+ffmpeg -y -ss 0 -t 52 -i "$INPUT" \
+  -vf "fps=${FPS},scale=${WIDTH}:-1:flags=lanczos,palettegen=stats_mode=diff" \
+  "$PALETTE"
+
+ffmpeg -y -ss 0 -t 52 -i "$INPUT" -i "$PALETTE" \
+  -filter_complex "setpts=${PTS}*PTS,fps=${FPS},scale=${WIDTH}:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle" \
+  "$OUTPUT"
+```
+
+For webm-to-webm with audio synced to new speed:
+```bash
+# 2x: video setpts=0.5, audio atempo=2.0 (atempo range is 0.5–2.0 per filter; chain for >2x)
+ffmpeg -y -i "$INPUT" -filter_complex "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]" -map "[v]" -map "[a]" out.webm
+```
+
 ### Batch: all webm files in a directory
 
 ```bash
