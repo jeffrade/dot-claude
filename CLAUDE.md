@@ -7,6 +7,8 @@
 
 **Consequence:** Using forbidden git commands breaks the codebase. This rule is non-negotiable.
 
+**Do NOT suggest git commands either.** Never print `git add`/`commit`/`push` command blocks or tell the user what to commit/how to commit. The user handles all git themselves and does not want commit instructions — they waste tokens. Finish the work, report what changed on disk, stop. Mention git ONLY if the user explicitly asks.
+
 ---
 
 ## ⚙️ Permission Enforcement
@@ -103,6 +105,8 @@ Custom (local) plugins live in `~/.claude/custom-plugins/plugins/` under the `de
 **Skill missing from `/skills`?** Check plugin registration first (steps 1–3 above) before debugging the skill content.
 
 **Stale plugin cache:** `claude plugin prune` only removes unused deps, NOT old version dirs under `~/.claude/plugins/cache/MARKETPLACE/PLUGIN/VERSION/`. Manual `rm -rf` required. Cross-reference `~/.claude/plugins/installed_plugins.json` to find live versions.
+
+**Caveman statusline path:** `settings.json` `statusLine.command` hardcodes the caveman version hash (e.g. `c2ed24b3e5d4`). If caveman is manually updated, re-run the statusline setup skill — the path breaks silently on version change.
 
 Run `make help` in `~/.claude/` for all plugin management commands.
 
